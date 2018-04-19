@@ -1,6 +1,7 @@
 # ActiveJobs
 Actividad para la exposicion de Active Jobs, Ingenieria de Software 2 UNAL
-Ejercicio: Crear un Job basico que elimine todos los registros que cumplan cierta propiedad
+
+Ejercicio: Crear un Job basico que elimine los registros que cumplan cierta propiedad
 
 # Pasos iniciales
 
