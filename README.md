@@ -64,7 +64,7 @@ end
   end
 ```
 
-#Testing
+# Testing
 
 6. En una nueva consola ejecutamos la aplicacion y observamos los resultados en http://workspace-username.c9users.io/users/
 
