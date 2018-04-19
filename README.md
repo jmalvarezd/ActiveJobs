@@ -104,13 +104,13 @@ $ rails console
 
 # Mailers
 
-10. Creamos un nuevo mailer, que manejara nuestros correos para los usuarios
+9. Creamos un nuevo mailer, que manejara nuestros correos para los usuarios
 
 ```
 rails g mailer UserMailer
 ```
 
-11. Esto nos creara unos nuevos archivos, vamos a /app/mailers/user_mailer.rb y lo dejamos asi, definiendo un nuevo correo:
+10. Esto nos creara unos nuevos archivos, vamos a /app/mailers/user_mailer.rb y lo dejamos asi, definiendo un nuevo correo:
 
 ```
 class UserMailer < ApplicationMailer
@@ -120,7 +120,7 @@ class UserMailer < ApplicationMailer
     end
 end
 ```
-11.5. Le damos tambien una direccion de envio por defecto: 
+10.5. Le damos tambien una direccion de envio por defecto: 
 
 ```
 # /app/mailers/application_mailer.rb
@@ -130,7 +130,7 @@ class ApplicationMailer < ActionMailer::Base
 end
 ```
 
-12.Creamos el contenido de este nuevo correo en dos archivos:
+11. Creamos el contenido de este nuevo correo en dos archivos:
 
 ```
 #/app/views/user_mailer/welcome_email.html.erb
@@ -159,7 +159,7 @@ You have successfully signed up.
 Thanks for joining and have a great day!
 ```
 
-13. Por ultimo, hacemos que este correo se envie cuando se cree un nuevo usuario, en el controlador:
+12. Por ultimo, hacemos que este correo se envie cuando se cree un nuevo usuario, en el controlador:
 
 ```
 # /app/controllers/users_controller.rb
@@ -174,7 +174,7 @@ end
 ...
 ```
 
-14. Cuando se quiere que esto funcione en una aplicacion real, hace falta por ultimo modificar la configuracion smtp de la aplicacion:
+13. Cuando se quiere que esto funcione en una aplicacion real, hace falta por ultimo modificar la configuracion smtp de la aplicacion:
 
 ```
 # /config/enviroments/development.rb
