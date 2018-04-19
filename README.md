@@ -27,7 +27,7 @@ $ cd jobsactivity
 1. Una vez tengamos la aplicacion base creada, generamos un nuevo scaffold sobre el cual trabajar
 
 ```
-$ rails generate scaffold User moneyspent:integer
+$ rails generate scaffold User moneyspent:integer email:string
 ```
 
 2. Nos aseguramos que la base de datos se actualice
@@ -104,13 +104,6 @@ $ rails console
 
 # Mailers
 
-9. Comenzamos dandole la propiedad email a los Usuarios
-
-```
-rails g migration AddEmailToUsers email:string
-rails db:migrate
-```
-
 10. Creamos un nuevo mailer, que manejara nuestros correos para los usuarios
 
 ```
@@ -125,6 +118,15 @@ class UserMailer < ApplicationMailer
         @user = user
         mail(to: @user.email, subject: 'Welcome to jobsActivity')
     end
+end
+```
+11.5. Le damos tambien una direccion de envio por defecto: 
+
+```
+# /app/mailers/application_mailer.rb
+class ApplicationMailer < ActionMailer::Base
+  default from: 'pruebaexpoingsis@gmail.com'
+  layout 'mailer'
 end
 ```
 
@@ -165,6 +167,11 @@ Thanks for joining and have a great day!
 if @user.save
   UserMailer.welcome_email(@user).deliver_later
 ...
+...
+def user_params
+   params.require(:user).permit(:moneyspent, :email)
+end
+...
 ```
 
 14. Cuando se quiere que esto funcione en una aplicacion real, hace falta por ultimo modificar la configuracion smtp de la aplicacion:
@@ -182,8 +189,8 @@ config.action_mailer.raise_delivery_errors = true
     :address  => "smtp.gmail.com",
     :port     => 587,
     :domain => 'gmail.com',
-    :user_name => Rails.application.secrets.gmail_username,
-    :password => Rails.application.secrets.gmail_password,
+    :user_name => "pruebaexpoingsis@gmail.com",
+    :password => "unalse20181",
     :authentication => "plain",
     :enable_starttls_auto => true
   }
