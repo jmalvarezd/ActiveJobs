@@ -4,7 +4,7 @@ Ejercicio: Crear un Job basico que elimine todos los registros que cumplan ciert
 
 # Pasos iniciales
 
-En una consola vacia de Cloud 9, ejecutar los comandos iniciales usuales
+0. En una consola vacia de Cloud 9, ejecutar los comandos iniciales usuales
 
 ```
 $ nvm install v8.9.4
@@ -21,26 +21,27 @@ $ rails new jobsactivity
 ```
 $ cd jobsactivity
 ```
+# Ejercicio:
 
-Una vez tengamos la aplicacion base creada, generamos un nuevo scaffold sobre el cual trabajar
+1. Una vez tengamos la aplicacion base creada, generamos un nuevo scaffold sobre el cual trabajar
 
 ```
 $ rails generate scaffold User moneyspent:integer
 ```
 
-Nos aseguramos que la base de datos se actualice
+2. Nos aseguramos que la base de datos se actualice
 
 ```
 $ rails db:migrate
 ```
 
-Generamos el nuevo Job que tendra la logica a ejecutar.
+3. Generamos el nuevo Job que tendra la logica a ejecutar.
 
 ```
 $ rails generate job usercleaner
 ```
 
-Se habra creado entonces un nuevo archivo: /app/jobs/usercleaner_job.rb , inicialmente asi:
+4. Se habra creado entonces un nuevo archivo: /app/jobs/usercleaner_job.rb , inicialmente asi:
 
 ```
 class UsercleanerJob < ApplicationJob
@@ -52,10 +53,51 @@ class UsercleanerJob < ApplicationJob
 end
 ```
 
-Implementamos el metodo perform con lo que deseamos que se realice al llamar este job:
+5. Implementamos el metodo perform con lo que deseamos que se realice al llamar este job:
 
 ```
   def perform(*args)
-    Users.find(
+    @user = User.find_by "moneyspent < 10"
+    @user.destroy
+    puts "Destroying non-spender account"
   end
 ```
+#Testing
+
+6. En una nueva consola ejecutamos la aplicacion y observamos los resultado en http://workspace-username.c9users.io/users/
+
+```
+$ rails server -b 0.0.0.0
+```
+
+7. Abrimos la consola de Rails y creamos algunos registros de prueba
+
+```
+$ rails console
+```
+
+```
+> u1 = User.create(moneyspent: 5)
+```
+
+```
+> u2 = User.create(moneyspent: 12)
+```
+
+```
+> u3 = User.create(moneyspent: 3)
+```
+
+8. Ejecutamos el Job :
+
+```
+>  UsercleanerJob.perform_later
+```
+
+8.5 Tambien podemos ejecutarlo luego de pasado un intervalo
+
+```
+> UsercleanerJob.set(wait: 30.second).perform_later
+```
+
+Conclusion: Los jobs pueden ejecutar cualquier codigo de Ruby, y son utiles para enviar correos frecuentes, programar tareas, ejecutar limpiezas, crear resumenes de actividad, entre otros.
