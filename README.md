@@ -102,4 +102,92 @@ $ rails console
 > UsercleanerJob.set(wait: 30.second).perform_later
 ```
 
+# Mailers
+
+9. Comenzamos dandole la propiedad email a los Usuarios
+
+```
+rails g migration AddEmailToUsers email:string
+rails db:migrate
+```
+
+10. Creamos un nuevo mailer, que manejara nuestros correos para los usuarios
+
+```
+rails g mailer UserMailer
+```
+
+11. Esto nos creara unos nuevos archivos, vamos a /app/mailers/user_mailer.rb y lo dejamos asi, definiendo un nuevo correo:
+
+```
+class UserMailer < ApplicationMailer
+    def welcome_email(user)
+        @user = user
+        mail(to: @user.email, subject: 'Welcome to jobsActivity')
+    end
+end
+```
+
+12.Creamos el contenido de este nuevo correo en dos archivos:
+
+```
+#/app/views/user_mailer/welcome_email.html.erb
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1 >Welcome to mailers!</h1>
+    <p>
+      You have successfully signed up.<br>
+    </p>
+    <p>Thanks for joining and have a great day!</p>
+  </body>
+</html>
+```
+
+```
+# /app/views/user_mailer/welcome_email.text.erb
+Welcome to mailers!
+
+You have successfully signed up.
+
+Thanks for joining and have a great day!
+```
+
+13. Por ultimo, hacemos que este correo se envie cuando se cree un nuevo usuario, en el controlador:
+
+```
+# /app/controllers/users_controller.rb
+...
+if @user.save
+  UserMailer.welcome_email(@user).deliver_later
+...
+```
+
+14. Cuando se quiere que esto funcione en una aplicacion real, hace falta por ultimo modificar la configuracion smtp de la aplicacion:
+
+```
+# /config/enviroments/development.rb
+...
+config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.perform_deliveries = true
+
+  config.action_mailer.perform_caching = false
+  
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    :address  => "smtp.gmail.com",
+    :port     => 587,
+    :domain => 'gmail.com',
+    :user_name => Rails.application.secrets.gmail_username,
+    :password => Rails.application.secrets.gmail_password,
+    :authentication => "plain",
+    :enable_starttls_auto => true
+  }
+...
+```
+
 Conclusion: Los jobs pueden ejecutar cualquier codigo de Ruby, y son utiles para enviar correos frecuentes, programar tareas, ejecutar limpiezas, crear resumenes de actividad, entre otros.
