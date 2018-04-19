@@ -3,6 +3,8 @@ Actividad para la exposicion de Active Jobs, Ingenieria de Software 2 UNAL
 
 Ejercicio: Crear un Job basico que elimine los registros que cumplan cierta propiedad
 
+Ejercicio_2 : Crear un mailer
+
 # Pasos iniciales
 
 0. En una consola vacia de Cloud 9, ejecutar los comandos iniciales usuales
